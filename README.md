@@ -1,4 +1,10 @@
-# LinkedArray
+# LinkedArray  
+A different dynamic array
+
+## Running Time:  
+Random Access: Ο(log n)  
+Iterator Access: θ(1)  
+(Non-amortized) Add element at end: θ(1)
 
 ## Usage:  
 ```
