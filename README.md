@@ -21,13 +21,31 @@ for (int i = 0; i < arr.size(); i++)
 
 ## Preliminary Tests:  
 ```
+10000 ints comparison: Linked Array vs Vector vs List:
+
+LinkedArray push_back execution time (s): 4.7e-05
+LinkedArray random access execution time (s): 0.000288
+LinkedArray pop_back execution time (s): 4.4e-05
+
+Vector push_back execution time (s): 0.000436
+Vector random access execution time (s): 3.2e-05
+Vector pop_back execution time (s): 0.000359
+
+List push_back execution time (s): 0.002354
+List random access execution time (s): 0.128157
+List pop_back execution time (s): 0.00066
+
+
 100000000 ints comparison: Linked Array vs Vector vs List:
 
-LinkedArray push_back execution time (s): 0.43606
-LinkedArray random access execution time (s): 10.9912
-LinkedArray pop_back execution time (s): 0.493611
+LinkedArray push_back execution time (s): 0.450082
+LinkedArray random access execution time (s): 5.29738
+LinkedArray pop_back execution time (s): 0.476507
 
-Vector push_back execution time (s): 3.49354
-Vector random access execution time (s): 0.572086
-Vector pop_back execution time (s): 3.78261
+Vector push_back execution time (s): 3.4248
+Vector random access execution time (s): 0.340808
+Vector pop_back execution time (s): 3.76075
+
+List push_back execution time (s): 24.9823
+** Code stopped, this mightve taken 2.49823e9 seconds
 ```
