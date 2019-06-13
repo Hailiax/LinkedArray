@@ -10,6 +10,11 @@ struct LinkedArrayNode
 	T* array;
 	LinkedArrayNode* next;
 	LinkedArrayNode* prev;
+	
+	~LinkedArrayNode()
+	{
+		delete[] array;
+	}
 };
 
 template <typename T>
@@ -34,6 +39,7 @@ public:
 	
 	T& operator[] (int);
 	void push_back(const T &);
+	void pop_back();
 	
 	void double_capacity();
 	void halve_capacity();
@@ -44,7 +50,7 @@ template <typename T>
 LinkedArray<T>::LinkedArray()
 	: first_node_( new LinkedArrayNode<T> ),
 	  reserved_size_exponent_( 0 ),
-	  reserved_size_power_( 1 ), // Starts with one reserved space
+	  reserved_size_power_( 1 ), // Starts with one reserved space. Described the sum of all reserved arrays
 	  size_( 0 )
 {
 	last_node_ = first_node_;
@@ -56,7 +62,14 @@ LinkedArray<T>::LinkedArray()
 template <typename T>
 LinkedArray<T>::~LinkedArray()
 {
-	// TODO: delete all arrays
+	while (last_node_->prev != NULL) // Until the last node is the first node
+	{
+		// Delete last node
+		last_node_ = last_node_->prev;
+		delete last_node_->next;
+	}
+	// Delete the first node
+	delete last_node_;
 }
 
 template <typename T>
@@ -82,22 +95,29 @@ T& LinkedArray<T>::operator[](int index)
 		exit(0);
 	}
 	
-	// Find and return value
-	LinkedArrayNode<T>* temp_node = first_node_;
-	int temp_power = 1;
+	// TODO: possibly clean this up?
+	// Find and return value by
+	// Finding the node the value is in by comparing to powers of two. (advancing to next node if the value is greater than the node's array size)
+	// Returning with the index subtracted by all skipped array's sizes
 	
-	if (index == 0) // Weird math since there are two arrays with size 2^0. There should be one.
-		return first_node_->array[0];
-	index--;
-	temp_node = temp_node->next;
+	// The beginning of the list has two arrays with length one so we need to explicity check for the first one before using 2^n to traverse the list (our list has array lenghts 1,1,2,4,8... while 2^n gives 1,2,4,8,16...)
+	if (index == 0)
+		return first_node_->array[0]; // If it is, then stop the function here
 	
-	while (index >= temp_power)
+	// If not, then we need to pretend that the second node is the first node in the coming while loop for easier calculation
+	LinkedArrayNode<T>* temp_node = first_node_->next;
+	index--; // Subtract the index skipped in the first array
+	int temp_power = 1; // This is one power of two behind how reserved_size_power_ is calculated. (that's why we have the skipping first node step above.) This describes the size of the node currently being traversed instead of the sum of all nodes traversed thus far.
+	
+	while (index >= temp_power) // While the index is larger than the current node's array size
 	{
+		// Skip to next node, updating index and temp_power to reflect
 		temp_node = temp_node->next;
-		index -= temp_power; // subtract the indicies skipped in last node
+		index -= temp_power; // subtract the indicies (traversed/skipped) in last node
 		temp_power <<= 1; // equiv to *2
 	}
 	
+	// Index has had all the previous traversals subtracted so this number is accurate for the current temp_node
 	return temp_node->array[index];
 }
 
@@ -105,15 +125,26 @@ template <typename T>
 void LinkedArray<T>::push_back(const T &new_element)
 {
 	// If ran out of space, reserve more
+	// size_ starts at 1 while indicies start at 0 => this is not off by one (don't need to add +1)
 	if (size_ == reserved_size_power_)
 		double_capacity();
 	
 	// Add value to end of last_node_ by subtracting previous node indicies (capacity/2) from the size
-	// size_ starts at 1 while indicies start at 0 => this is not off by one
 	last_node_->array[ size_ - (reserved_size_power_ >> 1) ] = new_element;
 	
 	// increase size
 	size_++;
+}
+
+template <typename T>
+void LinkedArray<T>::pop_back()
+{
+	// decrease size
+	size_--;
+	
+	// If size is a quarter of the reserved size, shrink the list
+	if (size_-1 == reserved_size_power_ >> 2)
+		halve_capacity();
 }
 
 template <typename T>
@@ -137,12 +168,24 @@ void LinkedArray<T>::double_capacity()
 template <typename T>
 void LinkedArray<T>::halve_capacity()
 {
-	// TODO: this
+	// Delete last node
+	last_node_ = last_node_->prev;
+	delete last_node_->next;
+	
+	// Updated reserved size values
+	reserved_size_exponent_--;
+	reserved_size_power_ >>= 1;
 }
 
 template <typename T>
 void LinkedArray<T>::resize(int n) // Accepts the new exponenet as n
 {
+	if (n < 0)
+	{
+		std::cout << "Cannot resize array to a negative exponenet";
+		exit(0);
+	}
+	
 	while (reserved_size_exponent_ < n)
 		double_capacity();
 	
