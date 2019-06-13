@@ -1,8 +1,7 @@
 #include <iostream>
 
-// General Structure for growth factor of 2: \
-TODO: Get rid of first node \
-[a] <-> [b] <-> [c,d] <-> [e,f,g,h] <-> [i,j,k,l,m,n,o,p] and so on
+// General Structure for growth factor of 2:
+// [a] <-> [b] <-> [c,d] <-> [e,f,g,h] <-> [i,j,k,l,m,n,o,p] and so on
 
 template <typename T>
 struct LinkedArrayNode
@@ -139,12 +138,20 @@ void LinkedArray<T>::push_back(const T &new_element)
 template <typename T>
 void LinkedArray<T>::pop_back()
 {
+	if (size_ == 0) // Ensure there is something to pop
+	{
+		std::cout << "Cannot pop_back list of 0 size, exiting";
+		exit(0);
+	}
+	
 	// decrease size
 	size_--;
 	
 	// If size is a quarter of the reserved size, shrink the list
 	if (size_-1 == reserved_size_power_ >> 2)
 		halve_capacity();
+	
+	// TODO: fix, the list will never shrink back down to one element with this logic
 }
 
 template <typename T>
@@ -182,7 +189,7 @@ void LinkedArray<T>::resize(int n) // Accepts the new exponenet as n
 {
 	if (n < 0)
 	{
-		std::cout << "Cannot resize array to a negative exponenet";
+		std::cout << "Cannot resize array to a negative exponenet, exiting";
 		exit(0);
 	}
 	
