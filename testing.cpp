@@ -1,7 +1,7 @@
 #include <iostream>
 #include <time.h>
 #include <vector>
-#include "../../GitHub/LinkedArray/LinkedArray.h"
+#include "LinkedArray.h"
 
 int main()
 {
