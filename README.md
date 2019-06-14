@@ -2,10 +2,10 @@
 A different dynamic array
 
 ## Running Time:  
-Note: these are all non-amortized
-Random Access: Ο(log n)
-Iterator Access: θ(1)
-Append: θ(1)
+Note: these are all non-amortized  
+Random Access: Ο(log n)  
+Iterator Access: θ(1)  
+Append: θ(1)  
 
 ## Usage:  
 ```
