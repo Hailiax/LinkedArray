@@ -1,7 +1,21 @@
 #include <iostream>
 
+
+///////////
+// NOTES //
+///////////
+
+
 // General Structure for growth factor of 2:
 // [a] <-> [b] <-> [c,d] <-> [e,f,g,h] <-> [i,j,k,l,m,n,o,p] and so on
+
+
+
+
+/////////////////
+// DEFINITIONS //
+/////////////////
+
 
 template <typename T>
 struct LinkedArrayNode
@@ -30,20 +44,35 @@ private:
 
 public:
 	
+	// Construction/Destruction
 	LinkedArray();
 	~LinkedArray();
 	
+	// Traits
 	int size();
 	int capacity();
 	
+	// Accessing elements
 	T& operator[] (int);
+	T* to_array();
+	
+	// Updating elements
 	void push_back(const T &);
 	void pop_back();
 	
+	// Updating capacity
 	void double_capacity();
 	void halve_capacity();
 	void resize(int);
 };
+
+
+
+
+//////////////////////////////
+// CONSTRUCTION/DESTRUCTION //
+//////////////////////////////
+
 
 template <typename T>
 LinkedArray<T>::LinkedArray()
@@ -71,6 +100,14 @@ LinkedArray<T>::~LinkedArray()
 	delete last_node_;
 }
 
+
+
+
+////////////
+// TRAITS //
+////////////
+
+
 template <typename T>
 int LinkedArray<T>::size()
 {
@@ -83,6 +120,14 @@ int LinkedArray<T>::capacity()
 	return reserved_size_power_;
 }
 
+
+
+
+////////////////////////
+// ACCESSING ELEMENTS //
+////////////////////////
+
+
 // Uses & so this returns a reference to make [] assignable; a[i] = b
 template <typename T>
 T& LinkedArray<T>::operator[](int index)
@@ -94,7 +139,7 @@ T& LinkedArray<T>::operator[](int index)
 		exit(0);
 	}
 	
-	// TODO: possibly clean this up?
+	// TODO: get rid of large subtractions/additions
 	// Find and return value by
 	// Finding the node the value is in by comparing to powers of two. (advancing to next node if the value is greater than the node's array size)
 	// Returning with the index subtracted by all skipped array's sizes
@@ -119,6 +164,46 @@ T& LinkedArray<T>::operator[](int index)
 	// Index has had all the previous traversals subtracted so this number is accurate for the current temp_node
 	return temp_node->array[index];
 }
+
+template <typename T>
+T* LinkedArray<T>::to_array()
+{
+	// Allocate array
+	T* arr = new T[size_];
+	
+	// Fill by iterating over all values
+	int elements_traversed = 0; // Counter for how many elements have been traversed
+	LinkedArrayNode<T>* traversing_node = first_node_; // Array that is being traversed
+	T* traversing_array_ptr = traversing_node->array; // Ptr to array/element to be incremented
+	int traversing_array_index = 0; // Counter for index in traversing array
+	int traversed_traversing_arrays_size_sum = 1; // If elements_traversed equals this, advance to next node/array,  double this, set traversing_array_index to 0
+	
+	while (elements_traversed < size_)
+	{
+		if (elements_traversed >= traversed_traversing_arrays_size_sum)
+		{
+			traversing_node = traversing_node->next;
+			traversing_array_ptr = traversing_node->array;
+			traversed_traversing_arrays_size_sum <<= 1;
+			traversing_array_index = 0;
+		}
+		
+		arr[elements_traversed] = *traversing_array_ptr;
+		traversing_array_ptr++;
+		elements_traversed++;
+	}
+	
+	// Return filled array
+	return arr;
+}
+
+
+
+
+///////////////////////
+// UPDATING ELEMENTS //
+///////////////////////
+
 
 template <typename T>
 void LinkedArray<T>::push_back(const T &new_element)
@@ -153,6 +238,14 @@ void LinkedArray<T>::pop_back()
 	
 	// TODO: fix, the list will never shrink back down to one element with this logic
 }
+
+
+
+
+///////////////////////
+// UPDATING CAPACITY //
+///////////////////////
+
 
 template <typename T>
 void LinkedArray<T>::double_capacity()
