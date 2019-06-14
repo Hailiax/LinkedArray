@@ -77,11 +77,11 @@ public:
 template <typename T>
 LinkedArray<T>::LinkedArray()
 	: first_node_( new LinkedArrayNode<T> ),
+	  last_node_( first_node_ ),
 	  reserved_size_exponent_( 0 ),
 	  reserved_size_power_( 1 ), // Starts with one reserved space. Described the sum of all reserved arrays
 	  size_( 0 )
 {
-	last_node_ = first_node_;
 	first_node_->array = new T[1];
 	first_node_->next = NULL;
 	first_node_->prev = NULL;
@@ -139,7 +139,6 @@ T& LinkedArray<T>::operator[](int index)
 		exit(0);
 	}
 	
-	// TODO: get rid of large subtractions/additions
 	// Find and return value by
 	// Finding the node the value is in by comparing to powers of two. (advancing to next node if the value is greater than the node's array size)
 	// Returning with the index subtracted by all skipped array's sizes
