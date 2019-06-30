@@ -8,7 +8,7 @@ Can be converted (in θ(log n) time) into regular dynamic array for constant tim
 
 ## Running Time:  
 Random Access: Ο(log n)  
-Iterator Access: θ(1)  
+Sequential Access (via iteration): θ(1)  
 Append: θ(1) non-amortized  
 
 ## Usage:  
