@@ -4,7 +4,7 @@ A different dynamic array
 ## Potential Uses:  
 Faster than dynamic array at appends/pops  
 Can be used for the fastest stack data structure  
-Can be converted into regular dynamic array for random access in log(n)  
+Can be converted (in log(n) time) into regular dynamic array for constant time random access    
 
 ## Running Time:  
 Random Access: Ο(log n)  
