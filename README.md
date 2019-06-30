@@ -7,7 +7,7 @@ Can be used for the fastest stack data structure
 Can be converted (in θ(log n) time) into regular dynamic array for constant time random access    
 
 ## Running Time:  
-Random Access: Ο(log n)  
+Random Access: Ο(log n) not amortized  
 Sequential Access (via iteration): θ(1)  
 Append: θ(1) non-amortized  
 
